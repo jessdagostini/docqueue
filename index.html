@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lexus</title>
+    <link rel="shortcut icon" href="img/favicon.png"/>
+    <link rel="stylesheet" href="css/iziToast.min.css">
+    <link rel="stylesheet" href="css/bulma.min.css">
+    <link rel="stylesheet" href="css/default.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script defer src="js/default.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <script src="js/iziToast.min.js" type="text/javascript"></script>
+  </head>
+
+  <body>
+    <nav class="navbar is-fixed-top is-primary" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand centered">
+            <img class="navbar-item center" src="img/logo-3.png" />
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                    <a class="button is-primary dict">
+                        <span class="icon is-small"><i class="fas fa-book-open"></i></span>
+                        <strong>Dictionary</strong>
+                    </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-one-quarter">
+                  <div class="box is-height">
+                    <div class="field">
+                        <div class="field">
+                            <label class="label">Tempo a Simular</label>
+                            <div class="control">
+                                <input class="input time" type="text" placeholder="Em minutos">
+                            </div>
+                        </div>
+                        <div class="control">
+                            <button class="button is-primary right">Simular</button>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="column">
+                    <div class="box is-height">
+                        <div class="field is-horizontal">
+                            <div class="field-label is-normal">
+                                <label class="label">A</label>
+                            </div>
+                            <div class="field-label is-normal">
+                                <label class="label">B</label>
+                            </div>
+                            <div class="field-label is-normal">
+                                <label class="label">C</label>
+                            </div>
+                    </div>
+                    <div class="field is-horizontal">
+                        <div class="field-body">
+                            <div class="field-label is-normal">
+                                <label class="label">Chegadas</label>
+                            </div>                           
+                            <div class="field">
+                                <input class="input lambda-a" type="text" placeholder="(min/item)">
+                            </div>
+                            <div class="field">
+                                <input class="input lambda-b" type="text" placeholder="(min/item)">
+                            </div>
+                            <div class="field">
+                                <input class="input lambda-c" type="text" placeholder="(min/item)">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field is-horizontal">
+                        <div class="field-body">
+                            <div class="field-label is-normal min-pad">
+                                <label class="label">Serviço</label>
+                            </div>                           
+                            <div class="field">
+                                <input class="input mi-a" type="text" placeholder="(min/item)">
+                            </div>
+                            <div class="field">
+                                <input class="input mi-b" type="text" placeholder="(min/item)">
+                            </div>
+                            <div class="field">
+                                <input class="input mi-c" type="text" placeholder="(min/item)">
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="columns">
+                <div class="column is-half">
+                    <div class="box">
+                        <p class="title is-5">Resultados</p>
+                        <table class="table is-bordered is-narrow" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th class="states"></th>
+                                    <th class="states">A</th>
+                                    <th class="states">B</th>
+                                    <th class="states">C</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Chegadas</td>
+                                    <td class="arrive-a">0</td>
+                                    <td class="arrive-b">0</td>
+                                    <td class="arrive-c">0</td>
+                                </tr>
+                                <tr>
+                                    <td>Serviço</td>
+                                    <td class="service-a">0</td>
+                                    <td class="service-b">0</td>
+                                    <td class="service-c">0</td>
+                                </tr>
+                                <tr>
+                                    <td>Número Médio de Carros no Sistema</td>
+                                    <td class="number-a">0</td>
+                                    <td class="number-b">0</td>
+                                    <td class="number-c">0</td>
+                                </tr>
+                                <tr>
+                                    <td>Tempo Médio Despendido no Sistema</td>
+                                    <td class="time-a">0</td>
+                                    <td class="time-b">0</td>
+                                    <td class="time-c">0</td>
+                                </tr>
+                                <tr>
+                                    <td>Taxa Média de Ocupação do Servidor</td>
+                                    <td class="tax-a">0</td>
+                                    <td class="tax-b">0</td>
+                                    <td class="tax-c">0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="column is-half">
+                    <div class="box">
+                        <p class="title is-5">Probabilidade de Clientes</p>
+                        <div class="field is-horizontal">
+                            <div class="field-label to-left">
+                                <label class="label">Número de clientes (N)</label>
+                            </div>
+                            <div class="field">
+                                <div class="control">
+                                    <input class="input clients" type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table is-bordered is-narrow" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th class="states">n</th>
+                                    <th class="states">A</th>
+                                    <th class="states">B</th>
+                                    <th class="states">C</th>
+                                </tr>
+                            </thead>
+                            <tbody class="probability">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+            <p class="modal-card-title">Dictionary</p>
+            <button class="delete close-modal" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+                <div class="tags" id="dict">
+                </div>
+            </section>
+            <footer class="modal-card-foot"></footer>
+        </div>
+    </div>
+  </body>
+</html>
