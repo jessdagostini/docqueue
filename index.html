@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Lexus</title>
+    <title>Docqueue</title>
     <link rel="shortcut icon" href="img/favicon.png"/>
     <link rel="stylesheet" href="css/iziToast.min.css">
     <link rel="stylesheet" href="css/bulma.min.css">
@@ -15,18 +15,10 @@
   </head>
 
   <body>
-    <nav class="navbar is-fixed-top is-primary" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-fixed-top is-light" role="navigation" aria-label="main navigation">
         <div class="navbar-brand centered">
             <img class="navbar-item center" src="img/logo-3.png" />
             <div class="navbar-end">
-                <div class="navbar-item">
-                    <div class="buttons">
-                    <a class="button is-primary dict">
-                        <span class="icon is-small"><i class="fas fa-book-open"></i></span>
-                        <strong>Dictionary</strong>
-                    </a>
-                    </div>
-                </div>
             </div>
         </div>
     </nav>
@@ -42,8 +34,17 @@
                                 <input class="input time" type="text" placeholder="Em minutos">
                             </div>
                         </div>
-                        <div class="control">
-                            <button class="button is-primary right">Simular</button>
+                        <div class="field is-grouped">
+                            <p class="control">
+                                <a class="button is-black right submit">
+                                Submit
+                                </a>
+                            </p>
+                            <p class="control">
+                                <a class="button is-light right reset">
+                                Reset
+                                </a>
+                            </p>
                         </div>
                     </div>
                   </div>
@@ -145,7 +146,7 @@
                     </div>
                 </div>
                 <div class="column is-half">
-                    <div class="box">
+                    <div class="box is-height-big">
                         <p class="title is-5">Probabilidade de Clientes</p>
                         <div class="field is-horizontal">
                             <div class="field-label to-left">
@@ -166,7 +167,7 @@
                                     <th class="states">C</th>
                                 </tr>
                             </thead>
-                            <tbody class="probability">
+                            <tbody id="probability">
                             </tbody>
                         </table>
                     </div>

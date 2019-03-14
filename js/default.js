@@ -14,8 +14,12 @@ updateMachine();
 
 $(document).ready(function() {
     // Show the dictionary
-    $(".button").click(function(){
+    $(".submit").click(function(){
         queue();
+    });
+
+    $(".reset").click(function(){
+        clean();
     });
 
     // Verify if the word is reconigzed by the machine
@@ -28,14 +32,43 @@ function queue() {
     var lambdaa = parseFloat($(".lambda-a").val());
     var lambdab = parseFloat($(".lambda-b").val());
     var lambdac = parseFloat($(".lambda-c").val());
+
     var mia = parseFloat($(".mi-a").val());
     var mib = parseFloat($(".mi-b").val());
     var mic = parseFloat($(".mi-c").val());
+
     var tempo = parseFloat($(".time").val());
+
+    if(isNaN(lambdaa) && isNaN(mia) || isNaN(tempo)) {
+        iziToast.show({
+            message: `Por favor, preencha todos os campos`,
+            color: 'red',
+            position: 'topCenter'
+        });
+
+        $(".time").addClass("invalid");
+        $(".lambda-a").addClass("invalid");
+        $(".lambda-b").addClass("invalid");
+        $(".lambda-c").addClass("invalid");
+        $(".mi-a").addClass("invalid");
+        $(".mi-b").addClass("invalid");
+        $(".mi-c").addClass("invalid");
+
+        return;
+    }
+
+    $(".time").removeClass("invalid");
+    $(".lambda-a").removeClass("invalid");
+    $(".lambda-b").removeClass("invalid");
+    $(".lambda-c").removeClass("invalid");
+    $(".mi-a").removeClass("invalid");
+    $(".mi-b").removeClass("invalid");
+    $(".mi-c").removeClass("invalid");
 
     lambdaa = tempo / lambdaa;
     lambdab = tempo / lambdab;
     lambdac = tempo / lambdac;
+
     mia = tempo / mia;
     mib = tempo / mib;
     mic = tempo / mic;
@@ -43,6 +76,7 @@ function queue() {
     $(".arrive-a").text((lambdaa).toFixed(2));
     $(".arrive-b").text((lambdab).toFixed(2));
     $(".arrive-c").text((lambdac).toFixed(2));
+
     $(".service-a").text((mia).toFixed(2));
     $(".service-b").text((mib).toFixed(2));
     $(".service-c").text((mic).toFixed(2));
@@ -60,10 +94,36 @@ function queue() {
     $(".tax-c").text((lambdac / mic).toFixed(2));
 }
 
+function clean() {
+    $(".arrive-a").text('0');
+    $(".arrive-b").text('0');
+    $(".arrive-c").text('0');
+
+    $(".service-a").text('0');
+    $(".service-b").text('0');
+    $(".service-c").text('0');
+
+    $(".number-a").text('0');
+    $(".number-b").text('0');
+    $(".number-c").text('0');
+
+    $(".time-a").text('0');
+    $(".time-b").text('0');
+    $(".time-c").text('0');
+
+    $(".tax-a").text('0');
+    $(".tax-b").text('0');
+    $(".tax-c").text('0');
+}
+
 function probability(n) {
+    $('#probability').find("tr").remove();
     for(i = 0; i<n; i++) {
-        var resulta = $(".time-a").val() * Math.pow($(".tax-a").val(),n);
-        console.log($(".time-a").val());
+        var resulta = (1 - $(".tax-a").text()) * Math.pow($(".tax-a").text(),i);
+        var resultb = (1 - $(".tax-b").text()) * Math.pow($(".tax-b").text(),i);
+        var resultc = (1 - $(".tax-c").text()) * Math.pow($(".tax-c").text(),i);
+        var row = `<td>P(${i})</td><td>${(resulta).toFixed(2)}</td><td>${(resultb).toFixed(2)}</td><td>${(resultc).toFixed(2)}</td>`;
+        $('#probability').append(`<tr>${row}</tr>`);
     }
 }
 

@@ -13,7 +13,6 @@
 }
 
 .invalid {
-    color: red;
     border-color: red !important;
     box-shadow: 0 0 0 0.125em rgba(160, 4, 4, 0.25) !important;    
 }
@@ -36,6 +35,10 @@
 
 .is-height{
     min-height: 160px;
+}
+
+.is-height-big{
+    min-height: 285px;
 }
 
 .min-pad {
