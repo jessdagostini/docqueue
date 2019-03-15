@@ -1,20 +1,44 @@
-var words = [];
-var states = [[]];
+var tecs = [];
+var tss = [];
 var globalState = 0;
 var globalMachine = [];
 
 // Add a primary dictionary to start
-var primaryWords = ['include', 'define', 'using', 'namespace', 'main', 'string', 'unsigned'];
-primaryWords.forEach(word => {
-    words.push(word);
-    $('#dict').append(`<span class="tag is-primary is-word word-${word}">${word}<button class="delete is-small remove-word" onclick="removeWord('${word}')"></button></span>`);
-    updateMachine();
+var primaryTEC = [15, 12, 10];
+primaryTEC.forEach(num => {
+    tecs.push(num);
+    $('.tec-opt').append(`<span class="tag is-light is-word tec-${num}">${num}<button class="delete is-small remove-word" onclick="removeWord('${num}')"></button></span>`);
+});
+
+var primaryTS = [9, 10, 11];
+primaryTS.forEach(num => {
+    tss.push(num);
+    $('.ts-opt').append(`<span class="tag is-light is-word ts-${num}">${num}<button class="delete is-small remove-word" onclick="removeWord('${num}')"></button></span>`);
 })
-updateMachine();
 
 $(document).ready(function() {
     // Show the dictionary
     $(".submit").click(function(){
+        queue();
+    });
+
+    $(".submit-tec").click(function(){
+        var num = ($('.input-tec').val());
+        includetec(num);
+        $('.input-tec').val('')
+    });
+
+    $(".submit-ts").click(function(){
+        var num = ($('.input-ts').val());
+        includets(num);
+        $('.input-ts').val('')
+    });
+
+    $(".submit-table").click(function(){
+        table();
+    });
+
+    $(".submit-queue").click(function(){
         queue();
     });
 
@@ -25,6 +49,11 @@ $(document).ready(function() {
     // Verify if the word is reconigzed by the machine
     $('.clients').keyup(() => {
         probability($('.clients').val());
+    });
+
+    $(".close-modal").click(function(){
+        $("#statistics").find("ul").remove();
+        $('.modal').removeClass("is-active");
     });
 })
 
@@ -94,6 +123,120 @@ function queue() {
     $(".tax-c").text((lambdac / mic).toFixed(2));
 }
 
+function table() {
+    $("#probability").find("tr").remove();
+
+    // Clientes
+    var i = 0;
+    // Tempo a ser calculado
+    var tempo = parseFloat($(".time").val());
+    // Tempo final de serviço no relógio
+    var tfsr = 0;
+    // Tempo de chegada no relógio
+    var tcr = 0;
+    // Tempo de inicio de serviço no relógio
+    var tisr = 0;
+    // Tempo de fila
+    var tf = 0;
+    // Tempo de serviço
+    var ts = 0;
+    // Tempo do cliente no sistema
+    var tcs = 0;
+    // Tempo livre do operador
+    var tlo = 0;
+
+    while (tfsr < tempo) {
+        row = `<td>${i}</td>`
+        // Tempo desde ultima chegada
+        tuc = tecs[Math.floor(Math.random()*tecs.length)];
+        row += `<td>${tuc}</td>`;
+
+        // Tempo de chegada no relógio
+        tcr += tuc;
+        row += `<td>${tcr}</td>`;
+
+        // Calcula tempo de operador livre
+        if (tfsr < tcr) {
+            tlo = tcr - tfsr
+        } else {
+            tlo = 0;
+        }
+
+        // Tempo de serviço
+        ts = tss[Math.floor(Math.random()*tss.length)];
+        row += `<td class="service">${ts}</td>`;
+
+        // Calcula tempo na fila
+        if (tfsr >= tcr) {
+            tf = tfsr - tcr;
+        } else {
+            tf = 0;
+        }
+        
+        //Tempo de início do serviço no relógio
+        tisr = tf + tcr;
+        row += `<td>${tisr}</td>`;
+        // Tempo na fila
+        row += `<td class="queue">${tf}</td>`;
+
+        // Tempo final de serviço no relógio
+        tfsr = ts + tisr;
+        row += `<td>${tfsr}</td>`;
+
+        // Tempo do cliente no sistema
+        tcs = ts + tf;
+        row += `<td class="system">${tcs}</td>`;
+
+        // Tempo de operador livre
+        row += `<td class="free">${tlo}</td>`;
+
+        // Adiciona na tabela
+        $("#probability").append(`<tr>${row}</tr>`);
+
+        // Incrementa cliente
+        i++;
+    }
+
+    var sumQueue = 0;
+    var sumClients = 0;
+    var sumClientsWait = 0;
+    var sumFree = 0;
+    var sumService = 0;
+    var sumSystem = 0;
+    var list = '';
+
+    $(".queue").each(function() {
+        sumQueue += Number($(this).text());
+        if (($(this).text() > 0)) {
+            sumClientsWait++;
+        }
+    });
+
+    $(".free").each(function() {
+        sumFree += Number($(this).text());
+    });
+
+    $(".service").each(function() {
+        sumService += Number($(this).text());
+    });
+
+    $(".system").each(function() {
+        sumSystem += Number($(this).text());
+    });
+
+    list += `<li>Tempo médio de espera na fila: ${(sumQueue/i).toFixed(2)}</li>`
+    list += `<li>Probabilidade de um cliente esperar na fila: ${(sumClientsWait/i).toFixed(2)}</li>`
+    list += `<li>Probabilidade de operador livre: ${(sumFree/tfsr).toFixed(2)}</li>`
+    list += `<li>Tempo médio de serviço: ${(sumService/i).toFixed(2)}</li>`
+    list += `<li>Tempo médio despendido no sistema: ${(sumSystem/i).toFixed(2)}</li>`
+
+    $("#statistics").append(`<ul>${list}</ul>`);
+
+    // console.log(sumSystem);
+
+    $('.modal').addClass('is-active');
+}
+
 function clean() {
     $(".arrive-a").text('0');
     $(".arrive-b").text('0');
@@ -114,6 +257,8 @@ function clean() {
     $(".tax-a").text('0');
     $(".tax-b").text('0');
     $(".tax-c").text('0');
+
+    $("#probability").find("tr").remove();
 }
 
 function probability(n) {
@@ -125,6 +270,16 @@ function probability(n) {
         var row = `<td>P(${i})</td><td>${(resulta).toFixed(2)}</td><td>${(resultb).toFixed(2)}</td><td>${(resultc).toFixed(2)}</td>`;
         $('#probability').append(`<tr>${row}</tr>`);
     }
+}
+
+function includetec(num) {
+    $('.tec-opt').append(`<span class="tag is-light tec-${num}">${num}<button class="delete is-small remove-word" onclick="removeWord('${num}')"></button></span>`);
+    tecs.push(num);
+}
+
+function includets(num) {
+    $('.ts-opt').append(`<span class="tag is-light ts-${num}">${num}<button class="delete is-small remove-word" onclick="removeWord('${num}')"></button></span>`);
+    tss.push(num);
 }
 
 // Remove word from the dict and update machine to do not reconigze it

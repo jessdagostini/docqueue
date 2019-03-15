@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Docqueue</title>
+    <link rel="shortcut icon" href="img/favicon.png"/>
+    <link rel="stylesheet" href="css/iziToast.min.css">
+    <link rel="stylesheet" href="css/bulma.min.css">
+    <link rel="stylesheet" href="css/default.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script defer src="js/default.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <script src="js/iziToast.min.js" type="text/javascript"></script>
+  </head>
+
+  <body>
+    <nav class="navbar is-fixed-top is-light" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand centered">
+            <img class="navbar-item center" src="img/logo-3.png" />
+            <div class="navbar-end">
+            </div>
+        </div>
+    </nav>
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-one-quarter">
+                  <div class="box is-height">
+                    <div class="field">
+                        <div class="field">
+                            <label class="label">Tempo a Simular</label>
+                            <div class="control">
+                                <input class="input time" type="text" placeholder="Em minutos">
+                            </div>
+                        </div>
+                        <div class="field is-grouped">
+                            <p class="control">
+                                <a class="button is-black right submit-table">
+                                Submit
+                                </a>
+                            </p>
+                            <p class="control">
+                                <a class="button is-light right reset">
+                                Reset
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="column">
+                    <div class="box is-height">
+                        <div class="columns">
+                            <div class="column is-6">
+                                <div class="field">
+                                    <div class="field">
+                                        <label class="label">Tempo Entre Chegadas</label>
+                                        <div class="control">
+                                            <input class="input input-tec" type="text" placeholder="Em minutos">
+                                        </div>
+                                    </div>
+                                    <div class="field is-grouped">
+                                        <p class="control">
+                                            <a class="button is-black right submit-tec">
+                                            Submit
+                                            </a>
+                                        </p>
+                                        <p class="control">
+                                            <a class="button is-light right reset-tec">
+                                            Reset
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column tags tec-opt">
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="column">
+                    <div class="box is-height">
+                        <div class="columns">
+                            <div class="column is-6">
+                                <div class="field">
+                                    <div class="field">
+                                        <label class="label">Tempo de Serviço</label>
+                                        <div class="control">
+                                            <input class="input input-ts" type="text" placeholder="Em minutos">
+                                        </div>
+                                    </div>
+                                    <div class="field is-grouped">
+                                        <p class="control">
+                                            <a class="button is-black right submit-ts">
+                                            Submit
+                                            </a>
+                                        </p>
+                                        <p class="control">
+                                            <a class="button is-light right reset-ts">
+                                            Reset
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column tags ts-opt">
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+              </div>
+              <div class="columns">
+                <div class="column">
+                    <div class="box">
+                        <p class="title is-5">Resultados</p>
+                        <table class="table is-bordered is-narrow" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th class="states">Cliente</th>
+                                    <th class="states">Tempo desde última chegada</th>
+                                    <th class="states">Tempo Chegada Relógio</th>
+                                    <th class="states">Tempo de Serviço</th>
+                                    <th class="states">Tempo de Ínicio Serviço Relógio</th>
+                                    <th class="states">Tempo na Fila</th>
+                                    <th class="states">Tempo Final Serviço Relógio</th>
+                                    <th class="states">Tempo Cliente Sistema</th>
+                                    <th class="states">Tempo Livre Operador</th>
+                                </tr>
+                            </thead>
+                            <tbody id="probability">                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+            <p class="modal-card-title">Estatísticas</p>
+            <button class="delete close-modal" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+                <div class="tags" id="statistics">
+                </div>
+            </section>
+            <footer class="modal-card-foot"></footer>
+        </div>
+    </div>
+  </body>
+</html>
