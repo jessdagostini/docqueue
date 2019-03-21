@@ -7,13 +7,13 @@ var globalMachine = [];
 var primaryTEC = [15, 12, 10];
 primaryTEC.forEach(num => {
     tecs.push(num);
-    $('.tec-opt').append(`<span class="tag is-light is-word tec-${num}">${num}<button class="delete is-small remove-word" onclick="removeWord('${num}')"></button></span>`);
+    $('.tec-opt').append(`<span class="tag is-light is-word tec-${num}">${num}<button class="delete is-small remove-tecs" onclick="removeTec('${num}')"></button></span>`);
 });
 
 var primaryTS = [9, 10, 11];
 primaryTS.forEach(num => {
     tss.push(num);
-    $('.ts-opt').append(`<span class="tag is-light is-word ts-${num}">${num}<button class="delete is-small remove-word" onclick="removeWord('${num}')"></button></span>`);
+    $('.ts-opt').append(`<span class="tag is-light is-word ts-${num}">${num}<button class="delete is-small remove-tss" onclick="removeTss('${num}')"></button></span>`);
 })
 
 $(document).ready(function() {
@@ -23,13 +23,13 @@ $(document).ready(function() {
     });
 
     $(".submit-tec").click(function(){
-        var num = ($('.input-tec').val());
+        var num = Number($('.input-tec').val());
         includetec(num);
         $('.input-tec').val('')
     });
 
     $(".submit-ts").click(function(){
-        var num = ($('.input-ts').val());
+        var num = Number($('.input-ts').val());
         includets(num);
         $('.input-ts').val('')
     });
@@ -130,6 +130,18 @@ function table() {
     var i = 0;
     // Tempo a ser calculado
     var tempo = parseFloat($(".time").val());
+
+    if(isNaN(tempo)) {
+        iziToast.show({
+            message: `Por favor, preencha todos os campos`,
+            color: 'red',
+            position: 'topCenter'
+        });
+
+        $(".time").addClass("invalid");
+
+        return;
+    }
     // Tempo final de serviço no relógio
     var tfsr = 0;
     // Tempo de chegada no relógio
@@ -273,166 +285,33 @@ function probability(n) {
 }
 
 function includetec(num) {
-    $('.tec-opt').append(`<span class="tag is-light tec-${num}">${num}<button class="delete is-small remove-word" onclick="removeWord('${num}')"></button></span>`);
+    $('.tec-opt').append(`<span class="tag is-light tec-${num}">${num}<button class="delete is-small remove-tec" onclick="removeTec('${num}')"></button></span>`);
     tecs.push(num);
 }
 
 function includets(num) {
-    $('.ts-opt').append(`<span class="tag is-light ts-${num}">${num}<button class="delete is-small remove-word" onclick="removeWord('${num}')"></button></span>`);
+    $('.ts-opt').append(`<span class="tag is-light ts-${num}">${num}<button class="delete is-small remove-tss" onclick="removeTss('${num}')"></button></span>`);
     tss.push(num);
 }
 
-// Remove word from the dict and update machine to do not reconigze it
-function removeWord(word) {
-    words.splice($.inArray(word, words), 1);
-    states = [[]];
-    globalMachine = [[]];
-    globalState = 0;
-    $(".word-" + word).remove();
-    updateMachine();
-    $('.verify-word').val('');
-    $('.verify-word').removeClass('valid');
-    $('.verify-word').removeClass('invalid');
-
+function removeTec(num) {
+    tecs.splice($.inArray(num, tecs), 1);
+    $(".tec-" + num).remove();
+    
     iziToast.show({
-        message: `Word '${word}' removed from the dict!`,
+        message: `'${num}' removed from TECs!`,
         color: 'green',
         position: 'topCenter'
     });
 }
 
-// Function to create/update the states machine
-function updateMachine() {
-    var next = 0;
-
-    words.forEach(word => {
-        var curr = 0;
-        // Look for all letters in the word
-        for (i = 0; i<word.length; i++) {
-            // If the current state in the position of the actual letter is not defined, define
-            if (typeof states[curr][word[i]] === 'undefined') {
-                // Set the state that this actual position will point
-                next = globalState + 1;
-                states[curr][word[i]] = next;
-                // Set the new state in the array/machine
-                states[next] = [];
-                // Change the current state to the next
-                globalState = curr = next;
-            } else {
-                // This state for the actual letter was defined before, so change the current state to verify
-                curr = states[curr][word[i]];
-            }
-            // If we are in the final letter of the word, set this current state as final
-            if (i == (word.length -1)) {
-                states[curr]['final'] = true;
-            }
-        }
+function removeTss(num) {
+    tss.splice($.inArray(num, tss), 1);
+    $(".ts-" + num).remove();
+    
+    iziToast.show({
+        message: `'${num}' removed from TSs!`,
+        color: 'green',
+        position: 'topCenter'
     });
-
-    $('#machine').html('');
-    var machine = [];
-    // For each state we will iterate to build the table machine
-    for (i = 0; i < states.length; i++) {
-        var aux = [];
-        var row = '';
-        // The columns are the letters A to Z
-        for(j = 'a'.charCodeAt(0); j <= 'z'.charCodeAt(0); j++) {
-            var letter = String.fromCharCode(j);
-            // If the actual state-letter is not defined, do not set the next state, set state otherwise
-            if (typeof states[i][letter] == 'undefined') {
-               row = row + `<td class="column-${letter} state-"><img src="img/favicon.png"/ ></td>`;
-               aux[letter] = '-';
-            } else {
-                row = row + `<td class="column-${letter}">q${states[i][letter]}</td>`;
-                aux[letter] = states[i][letter];
-            }
-        }
-
-        // Check if the state is not a final state
-        if (typeof states[i]['final'] !== 'undefined') {
-            row = `<td class="states">q${i}*</td>` + row;
-            aux['final'] = true;
-        } else {
-            row = `<td class="states">q${i}</td>` + row;
-        }
-        
-        $('#machine').append(`<tr class="row-${i}">${row}</tr>`);
-
-        machine.push(aux);
-    }
-
-    globalMachine = machine;
-}
-
-function verifyWord(word){
-    var state = 0;
-    var err = false;
-    for (var i = 0; i < word.length; i++) {
-        $('#machine tr').removeClass('focus-row');
-        $('#machine td').removeClass('focus-col');
-        $('#machine tr').removeClass('focus-row-err');
-        $('#machine td').removeClass('focus-col-err');
-
-        if (word[i] >= 'a' && word[i] <= 'z'){
-            if (globalMachine[state][word[i]] != '-' && !err){
-                $('#machine .row-' + state).addClass('focus-row');
-                $('#machine .column-' + word[i]).addClass('focus-col');
-                $('.verify-word').addClass('valid');
-                $('.verify-word').removeClass('invalid');
-                state = globalMachine[state][word[i]];
-            } else {
-                $('.verify-word').removeClass('valid');
-                $('.verify-word').addClass('invalid');
-                $('#machine .row-' + state).addClass('focus-row-err');
-                $('#machine .column-' + word[i]).addClass('focus-col-err');
-                err = true;
-                state++;
-            }
-        } else if (word[i] == ' ' && word.length > 1) {
-            if (globalMachine[state]['final']){
-                $('#machine .row-' + state).addClass('focus-row');
-                $('.verify-word').addClass('valid');
-                $('.verify-word').removeClass('invalid');
-
-                if (err) {
-                    $('.words').append(`<span class="tag is-danger">${word}</span>`);
-                    iziToast.show({
-                        title: 'Not Found!',
-                        message: 'Lexus could not recognize the word.',
-                        color: 'red',
-                        position: 'topCenter'
-                    });
-                } else {
-                    $('.words').append(`<span class="tag is-primary">${word}</span>`);
-                    iziToast.show({
-                        title: 'Found!',
-                        message: 'Lexus recognized the word!',
-                        color: 'green',
-                        position: 'topCenter'
-                    });
-                }
-            } else {
-                $('.words').append(`<span class="tag is-danger">${word}</span>`);
-                iziToast.show({
-                    title: 'Not Found!',
-                    message: 'Lexus could not recognize the word.',
-                    color: 'red',
-                    position: 'topCenter'
-                });
-            }
-            $('.verify-word').val('');
-                $('.verify-word').removeClass('valid');
-                $('.verify-word').removeClass('invalid');
-                state = 0;
-        }
-    }
-
-    if (word.length == 0) {
-        $('#machine tr').removeClass('focus-row');
-        $('#machine td').removeClass('focus-col');
-        $('#machine tr').removeClass('focus-row-err');
-        $('#machine td').removeClass('focus-col-err');
-        $('.verify-word').removeClass('valid');
-        $('.verify-word').removeClass('invalid');
-    }
 }
